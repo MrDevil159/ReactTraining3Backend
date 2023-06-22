@@ -1,4 +1,5 @@
 const express = require('express');
+require('dotenv').config();
 const app = express();
 const mongoose = require('mongoose');
 const passport = require('passport');
@@ -6,6 +7,8 @@ const cors = require('cors');
 const authRoutes = require('./authRoutes');
 const postRoutes = require('./postRoutes');
 require('../config/passport');
+
+
 
 // Middleware
 app.use(cors());
@@ -18,7 +21,7 @@ app.use('/api', passport.authenticate('jwt', { session: false }), postRoutes);
 
 // Connect to MongoDB
 mongoose
-  .connect('mongodb+srv://myAtlasDBUser:myatlas-001@myatlasclusteredu.p3jpgqa.mongodb.net/Post?retryWrites=true&w=majority', { useNewUrlParser: true, useUnifiedTopology: true })
+  .connect(process.env.MONGO, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => {
     console.log('Connected to MongoDB');
     // Start the server

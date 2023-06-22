@@ -1,7 +1,8 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/user');
-const secretKey = '9ab45ebced37176ce2f1ad385f235dd3e4e6c537fde2bf67d3b5404d7ad622ed24efb464b650041c0c4cbc57814f250e6864842cc92ed332d84634825e9199f9'; // Replace with your own secret key
+
+const secretKey = process.env.SECRET_TOKEN;
 
 const register = async (req, res) => {
   const { username, email, password } = req.body;
@@ -15,7 +16,7 @@ const register = async (req, res) => {
     await newUser.save();
 
     const payload = { _id: newUser._id, username: newUser.username };
-    const token = jwt.sign(payload, secretKey, { expiresIn: '1h' });
+    const token = jwt.sign(payload, secretKey, { expiresIn: '5s' });
 
     return res.status(200).json({ message: 'Registration successful', token });
   } catch (error) {
@@ -38,7 +39,7 @@ const login = async (req, res) => {
     }
 
     const payload = { _id: user._id, username: user.username };
-    const token = jwt.sign(payload, secretKey, { expiresIn: '1h' });
+    const token = jwt.sign(payload, secretKey, { expiresIn: '45m' });
 
     return res.status(200).json({ token, _id: user._id, username: user.username, email: user.email });
   } catch (error) {
